@@ -1,14 +1,16 @@
 import React, { FC } from "react";
 import { Button, Stack, Typography } from "@mui/material";
 import { NumberInput } from "@/style/styled-components/NumberInput";
-import { useLoginVerifyCodeMutation } from "@/api-managment/api/loginApi";
+import { useCreateOTPMutation } from "@/api-managment/api/loginApi";
 import { useAppDispatch } from "@/state-managment/store/store";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { ILoginFormData, VerifyNumberFormProps } from "@/style/componentsType";
 import { getInsuranceAgency } from "@/state-managment/slice/insuranceAgencySlice";
+import { useRouter } from "next/navigation";
 
 const VerifyNumberForm: FC<VerifyNumberFormProps> = () => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const {
     register,
     formState: { errors },
@@ -16,14 +18,13 @@ const VerifyNumberForm: FC<VerifyNumberFormProps> = () => {
   } = useForm<ILoginFormData>({
     mode: "onChange",
   });
-  const [loginVerifyCode] = useLoginVerifyCodeMutation();
+  const [createOTP] = useCreateOTPMutation();
 
   const handleLoginForm: SubmitHandler<ILoginFormData> = async (data) => {
-    console.log(data, "data");
     dispatch(getInsuranceAgency(data));
     try {
-      const response = await loginVerifyCode(data);
-      console.log("Response:", response);
+      const response = await createOTP(data);
+      router.push("/login");
     } catch (error) {
       console.error("Error:", error);
     }
@@ -49,7 +50,7 @@ const VerifyNumberForm: FC<VerifyNumberFormProps> = () => {
           variant="outlined"
           {...register("phone_number", {
             required: "وارد کردن شماره تلفن الزامی است.",
-            minLength: { value: 10, message: "شماره معتبر نمی باشد" },
+            minLength: { value: 11, message: "شماره معتبر نمی باشد" },
             maxLength: { value: 11, message: "شماره معتبر نمی باشد" },
           })}
           error={!!errors.phone_number}
