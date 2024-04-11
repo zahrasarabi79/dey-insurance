@@ -12,7 +12,7 @@ const initialState = {
   phone: "",
   phone_number: "",
   province: "",
-  Name: "",
+  Name: undefined,
 };
 const insuranceAgencySlice = createSlice({
   name: "insuranceAgencySlice",
