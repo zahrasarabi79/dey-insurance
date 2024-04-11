@@ -1,7 +1,7 @@
 export const palette = {
   text: {
     primary: "#1D1B1C",
-    disabled: "#FDFDFD4D",
+    disabled: "#919394",
   },
   primary: {
     main: "#008e9c",

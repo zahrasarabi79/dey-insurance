@@ -1,16 +1,15 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { NumberInput } from "@/style/styled-components/NumberInput";
 import { Stack } from "@mui/material";
+import { OTPInputProps } from "@/style/componentsType"; //because of the priority of OnKeyDown to OnChange we use "currentOTPIndex" variable
 //because of the priority of OnKeyDown to OnChange we use "currentOTPIndex" variable
 let currentOTPIndex: number = 0;
-const OTPInput = () => {
+const OTPInput: FC<OTPInputProps> = ({ setValue }) => {
   const [otp, setOtp] = useState<string[]>(new Array(5).fill(""));
   const [activeOTPIndex, setActiveOTPIndex] = useState(0);
-
   const inputRef = useRef<HTMLInputElement>(null);
   const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = target;
-    console.log(value, "value");
     const val = value.substring(value.length - 1);
     // Update the OTP array with the entered value
     const newOPt = [...otp];
@@ -32,7 +31,9 @@ const OTPInput = () => {
   useEffect(() => {
     inputRef.current?.focus();
   }, [activeOTPIndex]);
-  console.log(otp.join(""), "otp");
+
+  setValue("code", Number(otp.join("")));
+
   return (
     <Stack
       direction={"row-reverse"}
