@@ -4,11 +4,11 @@ import { NumberInput } from "@/style/styled-components/NumberInput";
 import { useCreateOTPMutation } from "@/api-managment/api/loginApi";
 import { useAppDispatch } from "@/state-managment/store/store";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { ILoginFormData, VerifyNumberFormProps } from "@/style/componentsType";
+import { ILoginFormData } from "@/style/componentsType";
 import { getInsuranceAgency } from "@/state-managment/slice/insuranceAgencySlice";
 import { useRouter } from "next/navigation";
 
-const VerifyNumberForm: FC<VerifyNumberFormProps> = () => {
+const VerifyNumberForm: FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const {
@@ -50,8 +50,15 @@ const VerifyNumberForm: FC<VerifyNumberFormProps> = () => {
           variant="outlined"
           {...register("phone_number", {
             required: "وارد کردن شماره تلفن الزامی است.",
-            minLength: { value: 11, message: "شماره معتبر نمی باشد" },
-            maxLength: { value: 11, message: "شماره معتبر نمی باشد" },
+            minLength: { value: 11, message: "شماره کمتر از حد مجاز می باشد." },
+            maxLength: {
+              value: 11,
+              message: "شماره بیشتر از حد مجاز می باشد.",
+            },
+            validate: (value) => {
+              if (value.toString()[0] !== "0")
+                return "شماره معتبر نمی‌باشد، باید با 0 شروع شود.";
+            },
           })}
           error={!!errors.phone_number}
           helperText={errors.phone_number && errors.phone_number.message}
