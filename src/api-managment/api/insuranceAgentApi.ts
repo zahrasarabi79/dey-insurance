@@ -21,9 +21,15 @@ const insuranceAgentApi = baseApi.injectEndpoints({
         body: body,
       }),
     }),
+    accessToken: builder.query<any, void>({
+      query: (body) => ({
+        url: `v2/app/DEY/agent/app_user_status/`,
+      }),
+    }),
   }),
 });
 export const {
+  useAccessTokenQuery,
   useRegisterAgentMutation,
   useCheckAgencyCodeMutation,
   useInsuranceBranchListQuery,
