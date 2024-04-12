@@ -1,7 +1,7 @@
 "use client";
-import "./globals.css";
+import "../globals.css";
 import MuiTheme from "@/theme/MuiTheme";
-import Background from "@/components/Background";
+import Background from "@/components/pages/background/Background";
 import { Provider } from "react-redux";
 import store from "@/state-managment/store/store";
 
