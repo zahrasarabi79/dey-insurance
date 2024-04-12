@@ -15,6 +15,8 @@ import {
 import ProvincesAutocomplete from "@/components/pages/insurance-agency/ProvincesAutocomplete";
 import CountryAutocomplete from "@/components/pages/insurance-agency/CountryAutocomplete";
 import InsuranceBranchAutocomplete from "@/components/pages/insurance-agency/InsuranceBranchAutocomplete";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 const InsuranceAgency = () => {
   const dispatch = useAppDispatch();
@@ -30,23 +32,30 @@ const InsuranceAgency = () => {
   const [checkAgencyCode] = useCheckAgencyCodeMutation();
   const [registerAgent] = useRegisterAgentMutation();
   const [isDispatch, setIsDispatch] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (isDispatch) {
       handleRegisterAgent();
     }
   }, [isDispatch]);
+
   const handleInsuranceAgency: SubmitHandler<IInsuranceAgencyFormData> = async (
     data,
   ) => {
     dispatch(getInsuranceAgency(data));
     setIsDispatch(true);
   };
-
   const handleRegisterAgent = async () => {
     try {
-      const res = await registerAgent(insuranceAgencyData);
-      console.log(res, "res");
+      const response = await registerAgent(insuranceAgencyData);
+      if ("data" in response) {
+        const { data } = response;
+        Cookies.set("token", data?.response?.access);
+        router.push("/submitResult");
+      } else {
+        console.error("Error:", response.error);
+      }
     } catch (error) {
       console.error("Error:", error);
     }
@@ -60,6 +69,14 @@ const InsuranceAgency = () => {
           variant="outlined"
           {...register("agent_code", {
             required: "وارد کردن کد نمایندگی الزامی است.",
+            validate: async (value) => {
+              const response = await checkAgencyCode(value);
+              if (!("data" in response)) {
+                console.log("dsd");
+                return "این نمایندگی قبلا ثبت شده است";
+              }
+              return undefined;
+            },
           })}
           error={!!errors.agent_code}
           helperText={errors.agent_code && errors.agent_code.message}
