@@ -1,10 +1,11 @@
 import React, { FC, useEffect, useRef, useState } from "react";
 import { NumberInput } from "@/style/styled-components/NumberInput";
-import { Stack } from "@mui/material";
+import { Stack, Typography, useTheme } from "@mui/material";
 import { OTPInputProps } from "@/style/componentsType"; //because of the priority of OnKeyDown to OnChange we use "currentOTPIndex" variable
 //because of the priority of OnKeyDown to OnChange we use "currentOTPIndex" variable
 let currentOTPIndex: number = 0;
-const OTPInput: FC<OTPInputProps> = ({ setValue }) => {
+const OTPInput: FC<OTPInputProps> = ({ setValue, isError }) => {
+  const theme = useTheme();
   const [otp, setOtp] = useState<string[]>(new Array(5).fill(""));
   const [activeOTPIndex, setActiveOTPIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -35,30 +36,42 @@ const OTPInput: FC<OTPInputProps> = ({ setValue }) => {
   setValue("code", Number(otp.join("")));
 
   return (
-    <Stack
-      direction={"row-reverse"}
-      columnGap={2}
-      sx={{ justifyContent: "center", alignItems: "center" }}
-    >
-      {otp.map((item, index) => (
-        <NumberInput
-          key={index}
-          inputRef={index === activeOTPIndex ? inputRef : null}
-          type={"number"}
-          variant="outlined"
-          value={otp[index]}
-          onChange={handleChange}
-          onKeyDown={(e) => handleOnKeyDown(e, index)}
-          sx={{
-            width: "55px",
-            "& .MuiInputBase-root.MuiOutlinedInput-root": {
-              borderRadius: 2,
-              direction: "rtl",
-              textAlign: "center",
-            },
-          }}
-        />
-      ))}
+    <Stack rowGap={2}>
+      <Stack
+        direction={"row-reverse"}
+        columnGap={2}
+        sx={{ justifyContent: "center", alignItems: "center" }}
+      >
+        {otp.map((item, index) => (
+          <NumberInput
+            key={index}
+            inputRef={index === activeOTPIndex ? inputRef : null}
+            type={"number"}
+            variant="outlined"
+            value={otp[index]}
+            onChange={handleChange}
+            error={isError}
+            onKeyDown={(e) => handleOnKeyDown(e, index)}
+            sx={{
+              width: "55px",
+              "& .MuiInputBase-root.MuiOutlinedInput-root": {
+                borderRadius: 2,
+                direction: "rtl",
+              },
+              "& .MuiInputBase-input.MuiOutlinedInput-input": {
+                textAlign: "center",
+              },
+            }}
+          />
+        ))}
+      </Stack>
+      {isError && (
+        <Typography
+          sx={{ color: theme.palette.error.main, fontSize: 12, px: 2 }}
+        >
+          کد نامعتبر می باشد؛ مجددا وارد نمایید.
+        </Typography>
+      )}
     </Stack>
   );
 };

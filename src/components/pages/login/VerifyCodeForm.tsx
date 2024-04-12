@@ -2,17 +2,17 @@
 import React, { FC } from "react";
 import { Button, Stack, Typography } from "@mui/material";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { IVerifyCodeData, VerifyFormProps } from "@/style/componentsType";
+import { IVerifyCodeData } from "@/style/componentsType";
 import OTPInput from "@/components/pages/login/OTPInput";
 import { useAppSelector } from "@/state-managment/store/store";
 import CountDownOTP from "@/components/pages/login/CountDownOTP";
 import { useVerifyOTPMutation } from "@/api-managment/api/loginApi";
 import { useRouter } from "next/navigation";
 
-const VerifyCodeForm: FC<VerifyFormProps> = () => {
+const VerifyCodeForm: FC = () => {
   const router = useRouter();
   const { setValue, handleSubmit } = useForm<IVerifyCodeData>();
-  const [verifyOTP] = useVerifyOTPMutation();
+  const [verifyOTP, { isError }] = useVerifyOTPMutation();
   const phoneNumber = useAppSelector(
     (state) => state.insuranceAgency.phone_number,
   );
@@ -20,12 +20,12 @@ const VerifyCodeForm: FC<VerifyFormProps> = () => {
   const handleVerifyCode: SubmitHandler<IVerifyCodeData> = async (data) => {
     try {
       const response = await verifyOTP(data);
-      router.push("/personalInformation");
+      "data" in response && router.push("/personalInformation");
     } catch (error) {
       console.error("Error:", error);
     }
   };
-
+  console.log(isError, "isError");
   return (
     <form onSubmit={handleSubmit(handleVerifyCode)}>
       <Stack rowGap={4}>
@@ -41,7 +41,8 @@ const VerifyCodeForm: FC<VerifyFormProps> = () => {
             {phoneNumber}
           </Typography>
         </Stack>
-        <OTPInput setValue={setValue} />
+        <OTPInput setValue={setValue} isError={isError} />
+
         <CountDownOTP />
         <Button type={"submit"} variant={"contained"} sx={{ mt: 3 }}>
           ادامه
