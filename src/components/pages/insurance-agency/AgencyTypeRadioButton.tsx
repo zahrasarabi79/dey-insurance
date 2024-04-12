@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import { Controller } from "react-hook-form";
 import {
   FormControl,
@@ -7,8 +7,9 @@ import {
   Radio,
   RadioGroup,
 } from "@mui/material";
+import { AgencyTypeRadioButtonProps } from "@/style/componentsType";
 
-const AgencyTypeRadioButton = ({ control }) => {
+const AgencyTypeRadioButton: FC<AgencyTypeRadioButtonProps> = ({ control }) => {
   return (
     <FormControl
       style={{

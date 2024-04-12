@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { IRegisterInsuranceAgencyState } from "@/style/componentsType";
 
-const initialState = {
+const initialState: IRegisterInsuranceAgencyState = {
   address: "",
   agency_type: "",
   agent_code: "",

@@ -14,13 +14,28 @@ export interface IVerifyCodeData {
   phone_number: string;
 }
 
-export interface OTPInputProps {
-  setValue: UseFormSetValue<IVerifyCodeData>;
+export interface IRegisterInsuranceAgencyState {
+  address: string;
+  agency_type: string;
+  agent_code: string;
+  city_code: string;
+  county: string;
+  first_name: string;
+  insurance_branch: string;
+  last_name: string;
+  phone: string;
+  phone_number: string;
+  province: string;
+  Name: undefined | string;
 }
 
 export interface IPersonalInformationFormData {
   first_name: string;
   last_name: string;
+}
+
+export interface AgencyTypeRadioButtonProps {
+  control: Control<IInsuranceAgencyFormData>;
 }
 
 export interface IInsuranceAgencyFormData {
@@ -36,6 +51,11 @@ export interface IInsuranceAgencyFormData {
   phone_number: string;
   province: string;
   Name: string;
+}
+
+export interface OTPInputProps {
+  setValue: UseFormSetValue<IVerifyCodeData>;
+  isError: any;
 }
 
 export interface PhoneTextFieldProps {
@@ -61,13 +81,3 @@ export interface InsuranceBranchAutocompleteProps
   extends ProvincesAutocompleteProps {
   watch: UseFormWatch<IInsuranceAgencyFormData>;
 }
-
-export interface Provinces {
-  name: string;
-  id: number;
-  is_active: boolean;
-}
-
-export interface VerifyFormProps {}
-
-export interface VerifyNumberFormProps {}
